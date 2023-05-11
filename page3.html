@@ -1,0 +1,89 @@
+
+<html>
+<head>
+    
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3/brython.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3/brython_stdlib.js"></script>
+</head>
+
+<body onload="brython(1)" >
+    <div id = 'div1'> Recopie de texte   </div>
+	<div id = 'div2'> Addition   </div>
+	<div id = 'div3'> Open file   </div>
+	<div id = 'div4'> creation de Tableau  </div>
+<script type="text/python">
+  
+from browser import document, html, alert, bind, window   # ces modules sont importants
+
+#copie de texte ---------------------------
+
+def copie(ev):
+	texte = document["moninput"].value
+	for i in range(3):
+		e= html.P(texte)
+		document["div1"]<=e
+
+element1 = html.INPUT(id="moninput")
+document["div1"]<=element1
+element = html.BUTTON("clique") # une syntaxe python améliorée   
+document["div1"]<=element
+element.bind("click", copie)
+
+#addition  ---------------------------
+def ajoute(ev):
+	s=int(document["inputa"].value)+int(document["inputb"].value)
+	e= html.P('la somme est '+str(s))
+	document["div2"]<=e
+
+inputa = html.INPUT(id="inputa")
+inputb = html.INPUT(id="inputb")
+document["div2"]<=inputa
+somme = html.BUTTON("+")
+document["div2"]<=somme
+document["div2"]<=inputb
+somme.bind("click", ajoute)
+#lecture de fichier  ---------------------------
+bout=html.INPUT(type="file")
+document["div3"]<=bout
+
+@bind(bout, "input")
+def file_read(ev):
+
+	def onload(event):
+		"""Triggered when file is read. The FileReader instance is
+		event.target.
+		The file content, as text, is the FileReader instance's "result"
+		attribute."""
+		texte = html.P(event.target.result)
+		document["div3"]<=texte
+        
+	# Get the selected file as a DOM File object
+	file =bout.files[0]
+	# Create a new DOM FileReader instance
+	reader = window.FileReader.new()
+	# Read the file content as text
+	reader.readAsText(file)
+	reader.bind("load", onload)
+#tableau ---------------------------
+def genere_tableau(ev):
+	l=int(document["inputl"].value)
+	c=int(document["inputc"].value)
+	tableau=html.TABLE(id='t')
+	for i in range(l):
+		ligne=html.TR()
+		for j in range(c):
+			ligne<=html.TD()
+		tableau<=ligne
+	document['div4']<=tableau
+	
+	
+document["div4"]<=html.INPUT(id="inputl")
+document["div4"]<=html.INPUT(id="inputc")
+genere = html.BUTTON("Génère")
+document["div4"]<=genere
+genere.bind("click",genere_tableau)
+
+</script>
+</body>
+</html>
+

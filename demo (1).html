@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="saphir.css">
+ <script src="https://cdn.jsdelivr.net/npm/brython@3/brython.min.js">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/brython@3/brython_stdlib.js">
+</script>
+	.cache {
+		display: none;
+			}
+
+	</style>
+</head>
+
+<body onload="brython(1)">
+<img src="im.gif"  id="sprite" class = "cache">
+<script type="text/python">
+from browser import document, html
+
+#------------- CANVAS
+canvas = html.CANVAS(id="moncanvas",height=300,width=300)
+ctx = canvas.getContext("2d")
+ctx.fillStyle = "black"
+ctx.fillRect(0, 0, canvas.width, canvas.height)
+document<=canvas
+# ------------ AFFICHE et EFFACE IMAGE
+def put_image(myId,x,y,w,h):
+    ctx = document["moncanvas"].getContext("2d")
+    im=document[myId]
+    ctx.drawImage(im, x, y, w, h)
+def clear_image(x,y,dx,dy):
+    ctx = document["moncanvas"].getContext("2d")
+    ctx.fillStyle = "black";
+    ctx.fillRect(x, y, dx,dy)
+# -------------------------------------
+
+def key_event_down(ev):
+	global x,y
+	clear_image(x,y,32,64)
+	if ev.key=='ArrowDown':
+		y=y+10
+	elif ev.key=='ArrowUp':
+		y=y-10
+	elif ev.key=='ArrowRight':
+		x=x+10
+	elif ev.key=='ArrowLeft':
+		x=x-10
+	put_image("sprite",x,y,32,64)
+	
+	
+x,y=50,50
+document.bind("keydown", key_event_down)  # touches du clavier
+put_image("sprite",50,50,32,64)
+
+
+	</script>
+</body>
+
+</html>
