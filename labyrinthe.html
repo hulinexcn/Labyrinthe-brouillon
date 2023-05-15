@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    <script src="/brython.js"></script>
+</head>
+
+<body onload="brython(1)">
+
+    <script type="text/python">
+canvas = html.CANVAS(id="canvas",height=300,width=300)
+
+-----DEPLACEMENTS
+def Keypressed(): 
+    global x, y
+    if keyCode == RIGHT :
+        x+=10
+    if keyCode == LEFT :
+        x-=10
+    if keyCode == UP :
+        y+=10
+    if keyCode == DOWN :
+        y-=10
+
+    </script>
+    
+</body>
+
+</html>
