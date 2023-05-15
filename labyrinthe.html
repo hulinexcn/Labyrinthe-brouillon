@@ -1,26 +1,55 @@
 <html>
-
-<head>
-    <script src="/brython.js"></script>
-</head>
-
-<body onload="brython(1)">
-
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="saphir.css">
+     <script src="https://cdn.jsdelivr.net/npm/brython@3/brython.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/brython@3/brython_stdlib.js">
+    </script>
+        </style>
+    </head>
+    
+    <body onload="brython(1)">
+    <img src="marche.png"  id="homme" class = "cache">
     <script type="text/python">
-canvas = html.CANVAS(id="canvas",height=300,width=300)
+    from browser import document, html
 
------DEPLACEMENTS
-def Keypressed(): 
-    global x, y
-    if keyCode == RIGHT :
-        x+=10
-    if keyCode == LEFT :
-        x-=10
-    if keyCode == UP :
-        y+=10
-    if keyCode == DOWN :
-        y-=10
-
+    #------------- CANVAS
+    canvas = html.CANVAS(id="moncanvas",height=300,width=300)
+    ctx = canvas.getContext("2d")
+    ctx.fillStyle = "pink"
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    document<=canvas
+    
+    # ------------ AFFICHE et EFFACE IMAGE
+    def put_image(myId,x,y,w,h):
+        ctx = document["moncanvas"].getContext("2d")
+        im=document[myId]
+        ctx.drawImage(im, x, y, w, h)
+    def clear_image(x,y,dx,dy):
+        ctx = document["moncanvas"].getContext("2d")
+        ctx.fillStyle = "pink";
+        ctx.fillRect(x, y, dx,dy)
+    # -------------------------------------
+    def key_event_down(ev):
+        global x,y
+        clear_image(x,y,32,64)
+        if ev.key=='ArrowDown':
+            y=y+10
+        elif ev.key=='ArrowUp':
+            y=y-10
+        elif ev.key=='ArrowRight':
+            x=x+10
+        elif ev.key=='ArrowLeft':
+            x=x-10
+        put_image("homme",x,y,32,64)
+        
+        
+    x,y=50,50
+    document.bind("keydown", key_event_down)  # touches du clavier
+    #put_image("homme",50,50,32,64)
+    
+    
     </script>
     
 </body>
