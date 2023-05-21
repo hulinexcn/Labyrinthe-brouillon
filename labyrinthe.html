@@ -29,21 +29,25 @@
         ctx.drawImage(im, x, y, w, h)
     def clear_image(x,y,dx,dy):
         ctx = document["moncanvas"].getContext("2d")
-        #ctx.fillStyle = "pink";
+        ctx.fillStyle = "pink";
         ctx.fillRect(x, y, dx,dy)
-    # -------------------------------------
+    # ------------- 
     def key_event_down(ev):
-        global x,y
-        clear_image(x,y,w,h)
-        if ev.key=='ArrowDown':
-            y=y+10
-        elif ev.key=='ArrowUp':
-            y=y-10
-        elif ev.key=='ArrowRight':
-            x=x+10
-        elif ev.key=='ArrowLeft':
-            x=x-10
-        put_image("homme",x,y,w,h)
+        global x, y
+        clear_image(x, y, w, h)
+
+        if ev.key == 'ArrowDown' and y < canvas.height - h and lab[(y + h) // 40 + 1][x // 40] == 0:
+            y += 40
+        elif ev.key == 'ArrowUp' and y > 0 and lab[(y - 1) // 40][x // 40] == 0:
+            y -= 40
+        elif ev.key == 'ArrowRight' and x < canvas.width - w and lab[y // 40][(x + w) // 40 + 1] == 0:
+            x += 40
+        elif ev.key == 'ArrowLeft' and x > 0 and lab[y // 40][(x - 1) // 40] == 0:
+            x -= 40
+
+        put_image("homme", x, y, w, h)
+
+
     #----------- Labyrinthe 
     lab = [ [1,1,1,1,1,1,1],
           [0,0,0,0,0,0,1],
@@ -52,7 +56,7 @@
           [1,0,1,0,1,1,1],
           [1,1,0,0,0,0,1],
           [1,1,1,1,1,3,1]]
-    #----------- Mur 
+    #----------- Mur (en cours par clara)
     def put_tab(tab):
         x_mur=0
         y_mur=0
@@ -62,15 +66,16 @@
                     put_image("mur", x_mur, y_mur, 40, 40)
                 x_mur+=40
             x_mur=0 #huline : car a chaque ligne du labyrinthe on retourne au debut
-            y_mur-=40
-              
-              
+            y_mur+=40
+    #----------- Déplacement du personnage dans le labyrinthe (en cours Huline)
+
     x,y,w,h=0,40,40,40
     document.bind("keydown", key_event_down)  # touches du clavier
     put_image("homme",x,y,w,h)
     put_tab(lab)
-    
 
+ 
+                
 
     
 
