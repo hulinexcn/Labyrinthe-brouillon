@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+        <link rel="stylesheet" href="{{ url_for('static', filename='labyrinthe.css') }}">
+     <script src="https://cdn.jsdelivr.net/npm/brython@3/brython.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/brython@3/brython_stdlib.js">
+    </script>
+    </head>
+    
+    <body onload="brython(1)">
+    <img src="/static/marche.png" alt="image"   id="homme" class = "cache">
+    <img src="/static/mur.png" alt="image"   id="mur" class = "cache">
+    <img src="/static/gagné.jpg" alt="image"   id="fini" class = "cache">
+    <img src="/static/cle.png" alt="image"   id="cle" class = "cache">
+    <img src="/static/monstre.png" alt="image"   id="monstre" class = "cache">
+    <script type="text/python">
+    from browser import document, html
+
+    taillebloc=20
+
+    #------------- CANVAS
+    
+    canvas = html.CANVAS(id="moncanvas",height=500,width=700)
+    ctx = canvas.getContext("2d")
+    ctx.fillStyle = "#B0C4DE"
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    document<=canvas
+    
+    # ------------ AFFICHE et EFFACE IMAGE
+
+    def put_image(myId,x,y,w,h):
+        ctx = document["moncanvas"].getContext("2d")
+        im=document[myId]
+        ctx.drawImage(im, x, y, w, h)
+    def clear_image(x,y,dx,dy):
+        ctx = document["moncanvas"].getContext("2d")
+        ctx.fillStyle = "#B0C4DE";
+        ctx.fillRect(x, y, dx,dy)
+
+    # ------------- Déplacement
+
+    def key_event_down(ev):
+        global x, y
+        clear_image(x, y, w, h)
+        x2,y2=x,y
+        if ev.key == 'ArrowDown':
+        
+                y2 += taillebloc
+                
+        elif ev.key == 'ArrowUp' :
+        
+                y2 -= taillebloc
+                
+        elif ev.key == 'ArrowRight':
+        
+                x2 += taillebloc
+                
+        elif ev.key == 'ArrowLeft' :
+        
+                x2 -= taillebloc
+       
+        if lab[y2//20][x2//20]==0 or lab[y2//20][x2//20]==4 or lab[y2//20][x2//20]==3: #Clara et Huline : x2 et y2 sont les futures positions du personnage mais elles deviennent les vraies valeures du personnages seulement si elles ne rencontre pas un mur. On divise y2 et x2 par 20 afin d’avoir l’indice de la colonne et de la ligne.
+
+            x=x2
+            y=y2
+
+        put_image("homme", x, y, w, h)
+
+
+    #----------- Labyrinthe 
+
+    lab = [ [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], #y=25, x=35
+            [1,0,0,1,0,0,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,1],
+            [1,0,1,1,1,0,1,1,0,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0,3],
+            [1,0,0,0,1,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1],
+            [1,1,1,0,1,0,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,0,1,1,1,1,1,0,1,0,1,0,1,1,1],
+            [1,0,0,0,0,0,1,1,0,0,1,0,0,1,0,1,1,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,1],
+            [1,0,1,1,0,1,1,0,0,1,1,1,0,1,0,1,0,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,1],
+            [1,0,1,1,0,1,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1],
+            [1,0,0,1,0,0,1,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,1],
+            [1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,0,0,1,0,1,1,1,1,0,1,0,1,0,1,1,1,1,0,1],
+            [1,0,0,0,1,0,1,0,0,0,1,0,0,1,0,1,1,1,1,1,1,0,0,1,0,1,0,0,0,0,1,1,1,0,1],
+            [1,0,1,0,1,1,1,0,1,0,1,1,0,1,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,0,1,0,1,0,1],
+            [1,0,1,0,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1],
+            [1,0,1,0,1,1,1,1,1,1,0,1,1,1,0,1,1,0,0,0,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1],
+            [1,1,1,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,1],
+            [1,0,0,0,1,0,1,0,1,0,1,1,0,1,1,1,1,0,1,0,1,1,0,1,1,1,0,0,1,1,1,1,1,0,1],
+            [1,0,1,1,1,1,0,0,1,0,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1],
+            [1,0,0,0,1,1,1,0,1,1,0,0,0,1,0,0,1,0,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1],
+            [1,1,1,0,1,1,1,0,1,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1],
+            [1,0,1,0,1,1,0,0,1,0,1,1,1,1,0,0,0,0,1,1,0,0,0,0,0,1,1,0,1,1,1,1,1,0,1],
+            [1,0,1,0,0,1,0,1,1,0,0,0,0,0,0,1,1,0,1,0,0,1,1,1,0,1,1,0,1,1,0,0,1,0,1],
+            [1,0,0,0,1,0,0,1,1,1,1,1,0,1,1,1,1,0,0,0,1,1,0,1,0,0,1,0,1,0,0,1,1,0,1],
+            [1,0,1,1,1,0,1,1,0,1,0,0,0,1,0,0,1,1,1,0,1,0,0,1,1,0,1,0,1,1,1,1,1,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]] 
+
+        
+    #----------- Mur 
+
+    def put_tab(tab):
+        x_mur=0
+        y_mur=0
+        for i in range(len(tab)):
+            for j in range(len(tab[i])):          
+                if tab[i][j]==1:
+                    put_image("mur", x_mur, y_mur, taillebloc, taillebloc)
+                x_mur+=taillebloc
+            x_mur=0 #huline : car a chaque ligne du labyrinthe on retourne au debut
+            y_mur+=taillebloc
+
+    #----------- objets et sortie
+
+    def objet2(tab):
+        for i in range(len(tab)):
+            for j in range(len(tab[i])):          
+                if tab[i][j]==4:
+                    put_image("cle", 40, 240, taillebloc, taillebloc)
+
+    #----------- monstre déplacements
+    def dep_monstre(tab): 
+        global x_monstre, y_monstre, x, y
+        clear_image(x_monstre, y_monstre, w, h) 
+        for i in range(10000):
+            for i in range(5):
+                y_monstre+=20
+                put_image("monstre", x_monstre, y_monstre, w, h)
+            for i in range(6):
+                x_monstre+=20
+                put_image("monstre", x_monstre, y_monstre, w, h)
+            put_image("monstre", x_monstre, y_monstre, w, h)        
+            
+
+
+        
+   
+    #----------- Fin du jeu ( en cours )
+   
+    
+    
+
+    #-----------------------------------------------------
+
+    x,y,w,h=100,480,taillebloc,taillebloc
+    x_monstre,y_monstre=660,440
+    document.bind("keydown", key_event_down)  # touches du clavier
+    put_image("homme",x,y,w,h)
+    put_image("monstre",x_monstre,y_monstre,w,h)
+    put_tab(lab)
+    objet2(lab)
+    dep_monstre(lab)
+   
+    
+    
+
+            
+                
+    </script>
+    
+</body>
+
+</html>
